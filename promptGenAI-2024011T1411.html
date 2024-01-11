@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>promptGenAI -  API Chat Interface</title>
+<style>
+  /* Basic reset */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, Arial;
+  }
+  /* Minimalist grayscale styling */
+  html, body {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    background: white;
+    color: #333;
+    height: 100%;
+    width: 100%;
+    font-size: 1rem;
+  }
+  .container {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px;
+    margin: 1px;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .header {
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+  }
+  .header h2 {
+    color: #212121;
+    margin-right: 2rem;
+    align-items: flex-end;
+  }
+  .header-nav {
+    box-sizing: border-box;
+    display: inline-flex;
+    padding: 6px;
+  }
+  /* Hamburger menu styles */
+  .hamburger {
+    cursor: pointer;
+    display: none;
+  }
+
+  .sm-buttons-container {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .page-content {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden; /* Prevent scrolling on the main content itself */
+    overflow-x: none;
+  }
+  .sidebar {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 230px;
+    padding: 1rem;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    max-width: 100%;
+    border-radius: 6px;
+    padding: 6px;
+  }
+  .sidebar-right {
+    min-width: 230px;
+  }
+  .sidebar-header {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .header h2,
+  .sidebar-header h2,
+  .sidebar-header h3 {
+    box-sizing: border-box;
+    margin-right: 6px;
+  }
+  .sidebar-content {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    border: none;
+  }
+  .parameters-container,
+  .codeView-input,
+  .functionDef-input,
+  .system-input {
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    border: none;
+  }
+  .codeView-input,
+  .functionDef-input,
+  .system-input {
+    resize: horizontal;
+    overflow-y: auto;
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+  }
+  .codeView-input,
+  .functionDef-input,
+  .system-input {
+    font-family: monospace;
+    white-space: pre;
+  }
+  .conversation-zone {
+    box-sizing: border-box;
+    flex: 1;
+    padding: 1rem;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    max-width: 100%;
+  }
+  .footer {
+    padding: 3px;
+    background: #f8f8f8;
+    border-top: 1px solid #ccc;
+  }
+  /* Toggle button styling */
+  .toggle-button {
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    background: none;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  /* Close button inside sidebars */
+  .close-button,
+  .help-button,
+  .clear-button,
+  .update-button {
+    padding: 0.3rem 0.6rem;
+    border: none;
+    background-color: transparent;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    float: right;
+  }
+  button:hover {
+    background-color: #bbb;
+  }
+</style>
+
+<style>
+  .conversation-zone {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+  }
+  #chat-container {
+    flex: 1;
+    display: flex; /* test - added 20231223 */
+    flex-grow: 1;
+    flex-direction: column-reverse;
+    padding: 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  #chat-interface {
+    display: flex;
+    margin-top: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 6px;
+  }
+  /* Style the chat user input */
+  #message-input {
+    box-sizing: border-box;
+    flex-grow: 1;
+    resize: vertical;
+    padding: 0.5rem;
+      border: none;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+    margin-right: 0.5rem;
+    padding-bottom: 0rem;
+    height: 3em;
+    min-width: 5em;
+  }
+
+  /* testing Style the chat user input */
+  #chat-user-input {
+    min-height: 2em; /* Set a minimum height for the textarea */
+    overflow-y: auto; /* Hide the scrollbar until needed */
+  }
+  .tts {
+  }
+  /* Style the send button and loading indicator container */
+  .tts-button,
+  .send-button,
+  .chat-loading-container {
+    box-sizing: border-box;
+    width: 4em; /* Example width, adjust as needed */
+    min-width: 4em;
+    height: 100%; /* Example height, adjust as needed */
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tts-button {
+      margin-right: 0.5rem;
+  }
+
+  .send-button-container {
+    position: relative;
+    display: inline-block; /* Ensures the container is only as wide as the button */
+  }
+  .send-button-indicator {
+    position: absolute;
+    top: .5em;
+    right: .5em;
+    transform: translate(50%, -50%); /* Moves the indicator to the top-right corner */
+    width: .5em; /* Smaller size to fit the corner */
+    height: .5em;
+    border-radius: 50%;
+    background-color: lightgrey;
+  }
+  .send-button-indicator.ready {
+    background-color: var(--icon-bg, #4caf50);
+  }
+
+
+  .chat-loading {
+    border: .3rem solid #eaeaea;
+    border-radius: 50%;
+    border-top: .3rem solid #121212;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 2s linear infinite;
+    padding: .7rem;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
+  .message {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 6px;
+  }
+  .chat-message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #565869;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08rem;
+    line-height: 16px;
+    text-transform: uppercase;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .role-indicator {
+    margin-right: 5px;
+  }
+  .message-type-selector {
+    display: flex;
+    margin-left: auto;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .remove-message-button {
+    background-color: transparent;
+    font-size: 14px;
+    font-family: monospace;
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    border: 1px solid grey;
+    color: grey;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 3rem;
+  }
+  .content {
+    display: none;
+  }
+
+.visible {
+/*display: block; */
+display: flex;
+}
+.hidden {
+  display: none;
+}
+</style>
+
+<style>
+  .input-pair label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .input-pair input,
+  .input-pair select,
+  .input-pair button {
+    width: 100%;
+    padding: 3px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .parameters-container .input-pair {
+    margin-bottom: 9px;
+    margin-left: .5rem;
+    margin-right: .5rem;
+  }
+  .tts-settings-container .input-pair{
+    margin-bottom: .5px;
+    margin-left: .5rem;
+    margin-right: .5rem;
+  }
+
+  .tts-settings-container .input-pair label,
+  .tts-settings-container .input-pair input[type="range"] {
+    flex: 1;
+    margin-bottom: 0px;
+  }
+  .tts-settings-container .input-pair input[type="text"] {
+    display: flex;
+    flex: 1;
+    margin-bottom: 0px;
+    max-width: 2em;
+    padding: .25em;
+    margin-right: .5em;
+    text-align: center;
+  }
+
+  .kit-container {
+    border: 1px solid #ccc;
+  }
+  .indicatorArea {
+    width: 100%;
+  }
+</style>
+
+<style>
+/* Popup container */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 640px;
+  height: 66vh; /* Two-thirds of the viewport height */
+  background: white;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 2;
+  display: none;
+}
+
+/* Popup header */
+.popup-header {
+  padding: 10px;
+  background: #f7f7f7;
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
+  text-align: center;
+}
+
+/* Popup table */
+.popup-table {
+  max-height: calc(66vh - 60px); /* Subtract the header and potential padding/margin */
+  overflow-y: auto;
+}
+/* Full-screen overlay */
+.overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1;
+}
+/* Button to open the popup */
+.open-popup {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin: 20px;
+}
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table, th, td {
+  border: 1px solid #ddd;
+}
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0; /* Stick to the top of the nearest scrolling ancestor */
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+}
+input[type="range"] {
+  flex: 1;
+  margin-right: 10px;
+}
+input[type="text"] {
+  flex: 1;
+}
+
+</style>
+
+<style>
+  /* Responsive layout changes */
+  @media (max-width: 768px) {
+    .header {
+      font-size: .7rem;
+      padding: .5rem;
+    }
+    .header h1 {
+      margin-right: 1rem;
+    }
+    .header-nav {
+      padding: 3px;
+      flex-direction: row;
+      padding-bottom: 0px;
+    }
+    .toggle-button {
+      padding: 3px;
+      margin-right: .2rem;
+      flex-shrink: 1;
+    }
+    .page-content {
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar {
+      order: -1;
+      border-right: none;
+      border-radius: 0px;
+      border: 1px solid #d3d3d3;
+      box-shadow: 5px 5px 10px #a9a9a9;
+      margin-bottom: 18px;
+    }
+    .codeView-input,
+    .functionDef-input,
+    .system-input {
+      resize: vertical;
+      overflow: auto;
+      width: 100%;
+    }
+    .conversation-zone {
+      border-left: none;
+    }
+    .popup {
+      width: 95%;
+    }
+  }
+
+  @media (max-width: 450px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .header h2 {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .header-nav {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .header-nav.hidden {
+      display: none;
+    }
+    .header-nav button {
+      width: 100%;
+      text-align: left;
+    }
+    .hamburger {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .codeView-input,
+    .functionDef-input,
+    .system-input {
+      height: 100%;
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <h2>
+        <div><span style="color: #212121;">prompt</span><span style="color: red;">GenAI</span></div>
+        <div class="h2-container">
+          <div class="hamburger" onclick="toggleVisibility('headerNav');">&#9776</div>
+        </div>
+      </h2>
+      <div class="header-nav" id="headerNav">
+        <button class="toggle-button" onclick="removeAllChildren('chat-container')" title="Clear the Chat Conversation">Clear Chat</button>
+        <button class="toggle-button" onclick="toggleVisibility('sidebar-codeView')" title="Toggle Code View sidebar">Code</button>
+        <button class="toggle-button" onclick="toggleVisibility('sidebar-functionDef')" title="Toggle functionDef sidebar">functionDef</button>
+        <button class="toggle-button" onclick="toggleVisibility('sidebar-roleSystem')" title="Toggle system sidebar">system</button>
+        <button class="toggle-button" onclick="toggleVisibility('sidebar-settings')" title="Toggle Settings sidebar">Settings</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <aside class="sidebar sidebar-left sidebar-codeView" title="Code View Sidebar">
+        <div class="sidebar-header">
+          <h3>Code</h3>
+          <div class="sm-buttons-container">
+            <button class="update-button" onclick="getCodeView('codeViewInput')" title="Refresh the Code View">refresh</button>
+            <button class="clear-button" onclick="clearElementById('codeViewInput')" title="clear Code View">clear</button>
+            <button class="help-button" onclick="openTablePopup('codeViewHelp')" title="Code View Help">?</button>
+            <button class="close-button" onclick="toggleVisibility('sidebar-codeView', 'off')" title="Close Code View sidebar">x</button>
+          </div>
+        </div>
+        <div class="sidebar-content">
+          <textarea id="codeViewInput" class="codeView-input" placeholder="API Prompt JSON Will Be Displayed Here" title="Code View Display Only"></textarea>
+        </div>
+      </aside>
+
+      <aside class="sidebar sidebar-left sidebar-functionDef" title="Function Definition Sidebar">
+        <div class="sidebar-header">
+          <h3>functionDef</h3>
+          <div class="sm-buttons-container">
+            <button class="clear-button" onclick="clearElementById('functionDefInput')" title="clear functionDef">clear</button>
+            <button class="help-button" onclick="openTablePopup('functionDefHelp')" title="functionDef Help">?</button>
+            <button class="close-button" onclick="toggleVisibility('sidebar-functionDef', 'off')" title="Close functionDef sidebar">x</button>
+          </div>
+        </div>
+        <div class="sidebar-content">
+          <textarea id="functionDefInput" class="functionDef-input" placeholder="Enter function definition JSON" title="Function Definition Input"></textarea>
+        </div>
+      </aside>
+
+      <aside class="sidebar sidebar-left sidebar-roleSystem" title="System Sidebar">
+        <div class="sidebar-header">
+          <h3>System</h3>
+          <div class="sm-buttons-container">
+            <button class="clear-button" onclick="clearElementById('systemInput')" title="clear System Prompt">clear</button>
+            <button class="close-button" onclick="toggleVisibility('sidebar-roleSystem', 'off')" title="Close System sidebar">x</button>
+        </div>
+        </div>
+        <div class="sidebar-content">
+          <textarea id="systemInput" class="system-input" placeholder="You are a helpful assistant." title="System Input"></textarea>
+        </div>
+      </aside>
+
+      <main class="conversation-zone" title="Main Conversation Zone">
+
+        <div id="chat-container"></div>
+
+        <div id="chat-interface">
+          <button class="tts-button hidden" id="toggleSpeechBtn" onclick="toggleSpeech()">&#128264</button>
+          <textarea id="message-input" placeholder="Enter your message" rows="1" title="Message Input"></textarea>
+          <div class="send-button-container" id="sendButtonContainer">
+            <button class="send-button" id="sendButton" title="Send Button">Send</button>
+            <div class="send-button-indicator" id="sendButtonIndicator"></div>
+          </div>
+          <div class="chat-loading-container  hidden" id="chatLoadingContainer">
+            <div class="chat-loading" id="chatLoading" title="Chat Loading Indicator"></div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="sidebar sidebar-right sidebar-settings" title="Settings Sidebar">
+        <div class="sidebar-header">
+          <h3>Settings</h3>
+          <button class="toggle-button hidden" onclick="toggleVisibility('indicatorArea')" title="Toggle indicatorArea">indicatorArea</button>
+          <div class="sm-buttons-container">
+            <button class="clear-button" onclick="clearLocalStorage()" title="Clear All Hold Settings">clear</button>
+            <button class="help-button" onclick="openTablePopup('apiHelp')" title="API Parameters Help">?</button>
+            <button class="close-button" onclick="toggleVisibility('sidebar-settings', 'off')" title="Close Settings sidebar">x</button>
+          </div>
+        </div>
+        <div class="sidebar-content">
+          <div class="parameters-container" id="apiParametersContainer">
+            <!-- API Key Pair -->
+            <div class="input-pair">
+              <label for="apiKey">openai_api_key:</label>
+              <input class="parameter" type="password" id="apiKey" required placeholder="API Key" title="Enter your API Key Here"/>
+            </div>
+            <!-- Model Selector Pair -->
+            <div class="input-pair">
+              <label for="apiModel">model:</label>
+              <select class="parameter model" id="apiModel" required title="Select Model">
+                <option value="">-- model pointers --</option>
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                <option value="gpt-4">gpt-4</option>
+                <option value="gpt-3.5-turbo-16k">gpt-3.5-turbo-16k</option>
+                <option value="gpt-4-32k">gpt-4-32k</option>
+                <option value="">-- introduced 20230613 --</option>
+                <option value="gpt-3.5-turbo-0613">gpt-3.5-turbo-0613</option>
+                <option value="gpt-4-0613">gpt-4-0613</option>
+                <option value="gpt-4-32k-0613">gpt-4-32k-0613</option>
+                <option value="">-- introduced 20231106 --</option>
+                <option value="gpt-3.5-turbo-1106" selected>gpt-3.5-turbo-1106</option>
+                <option value="gpt-4-1106-preview">gpt-4-1106-preview</option>
+                <option value="gpt-4-vision-preview">gpt-4-vision-preview</option>
+                <option value="">-- introduced 20230913 --</option>
+                <option value="gpt-3.5-turbo-instruct">gpt-3.5-turbo-instruct</option>
+                <option value="">-- discontinued 20240613 --</option>
+                <option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+                <option value="gpt-4-0314">gpt-4-0314</option>
+                <option value="gpt-4-32k-0314">gpt-4-32k-0314</option>
+                <option value="">-- discontinued 20240104 --</option>
+                <option value="text-davinci-003">text-davinci-003</option>
+              </select>
+            </div>
+            <!-- Hold Config Button Pair -->
+            <div class="input-pair">
+              <button class="btn" title="Copy setting to hold area" onclick="copyToLocalStorage('.parameter')">hold config</button>
+            </div>
+            <!-- Temperature Input Pair -->
+            <div class="input-pair">
+              <label for="apixTemperature">temperature:</label>
+              <input class="parameter" type="text" id="apixTemperature" value="0.7" title="Temperature Input"/>
+            </div>
+            <!-- Max Tokens Input Pair -->
+            <div class="input-pair">
+              <label for="apixMax_tokens">max_tokens:</label>
+              <input class="parameter" type="text" id="apixMax_tokens" title="Max Tokens Input"/>
+            </div>
+            <!-- Top P Input Pair -->
+            <div class="input-pair">
+              <label for="apixTop_p">top_p:</label>
+              <input class="parameter" type="text" id="apixTop_p" title="Top P Input"/>
+            </div>
+            <!-- Frequency Penalty Input Pair -->
+            <div class="input-pair">
+              <label for="apixFrequency_penalty">frequency_penalty:</label>
+              <input class="parameter" type="text" id="apixFrequency_penalty" title="Frequency Penalty Input"/>
+            </div>
+            <!-- Presence Penalty Input Pair -->
+            <div class="input-pair">
+              <label for="apixPresence_penalty">presence_penalty:</label>
+              <input class="parameter" type="text" id="apixPresence_penalty" title="Presence Penalty Input"/>
+            </div>
+            <div class="input-pair">
+              <button onclick="toggleVisibility('toggleSpeechBtn');toggleVisibility('ttsSettingsContainer');">Text to Speech</button>
+            </div>
+            <div class="tts-settings-container hidden" id="ttsSettingsContainer">
+              <div class="input-pair slider-container">
+                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+                <input type="text" id="volume"></input>
+                <label for="volume">Volume</label>
+              </div>
+              <div class="input-pair slider-container">
+                <input type="range" id="rate-slider" min="0.1" max="10" step="0.1" value="1">
+                <input type="text" id="rate"></input>
+                <label for="rate">Rate</label>
+              </div>
+              <div class="input-pair slider-container">
+                <input type="range" id="pitch-slider" min="0" max="2" step="0.1" value="1">
+                <input type="text" id="pitch"></input>
+                <label for="pitch">Pitch</label>
+              </div>
+              <div class="input-pair">
+                <button class="btn hidden" title="Copy TTS setting to hold area" onclick="copyToLocalStorage('.tts')">hold TTS</button>
+              </div>
+            </div>
+
+          </div>  <!-- end - parameters-container -->
+        </div>  <!-- end - sidebar-content -->
+      </aside>
+
+    </div>  <!-- end - page-content -->
+    <footer class="footer">
+      <p>&copy; 2024 Jeff Johnson - <a href="https://interestingperspectives.com">interestingperspectives.com</a></p>
+      <span>Experimental - For personal use only. </span><span>Contact Jeff for any other use.</span>
+    </footer>
+
+    <!-- The Overlay -->
+    <div class="overlay"></div>
+    <!-- The Popup -->
+    <div class="popup">
+      <div class="popup-header" id="popupHeader"></div>
+      <div class="popup-table" id="popupTable"></div>
+    </div>
+
+  </div>  <!-- end - container -->
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('***DOM - BEG');
+      populateFromLocalStorage();
+      // close settings side-pannel if api key is already present
+      if (apiKey){
+        toggleVisibility('sidebar-settings', 'off');
+      }
+      toggleVisibility('sidebar-settings', 'off'); // experimental
+      //
+      if (document.getElementById('codeViewInput').value === ''){
+        toggleVisibility('sidebar-codeView', 'off');
+      } else {
+        toggleVisibility('sidebar-codeView', 'on');
+      }
+      if (document.getElementById('functionDefInput').value === ''){
+        toggleVisibility('sidebar-functionDef', 'off');
+      } else {
+        toggleVisibility('sidebar-functionDef', 'on');
+      }
+      if (document.getElementById('systemInput').value === ''){
+        toggleVisibility('sidebar-roleSystem', 'off');
+      } else {
+        toggleVisibility('sidebar-roleSystem', 'on');
+      }
+      window.onload = function() {
+        setTimeout(function() {
+          // Check populated variables after 1 second
+          chatReadyCheck('sendButtonIndicator', (typeof apiKey !== 'undefined') ? apiKey.value : '');
+        }, 1000);
+      };
+      initializeRangeInputs();
+      console.log('***DOM - END');
+    });
+
+//
+//  CHAT INTERFACE FUNCTIONS - CHAT INTERFACE FUNCTIONS - CHAT INTERFACE FUNCTIONS
+//
+  const chatContainer = document.getElementById('chat-container');
+  const messageInput = document.getElementById('message-input');
+  const sendButton = document.getElementById('sendButton');
+
+
+  sendButton.addEventListener('click', () => {
+    const message = messageInput.value.trim();
+    if (message != '') {
+      appendMessage(message, 'user');
+      messageInput.value = '';
+    } else {
+      messageInput.value = ''; // Clear the textarea if the message is empty
+    }
+    console.log('calling chatSendMessage()');
+    chatSendMessage();
+  });
+
+  messageInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // This prevents the default behavior of adding a line break
+      const message = messageInput.value.trim();
+      if (message != '') {
+        sendButton.click();
+      }
+    }
+  });
+
+
+//
+//    APPLICATION UTILITY FUNCTIONS - APPLICATION UTILITY FUNCTIONS - APPLICATION UTILITY FUNCTIONS
+//
+
+function toggleNav() {
+  var nav = document.querySelector('.header nav');
+  if (nav.style.display === 'flex') {
+    nav.style.display = 'none';
+  } else {
+    nav.style.display = 'flex';
+  }
+}
+
+
+function clearElementById(elementId) {
+  const element = document.getElementById(elementId);
+  element.value = "";
+}
+
+function removeAllChildren(elementId) {
+  var chatContainer = document.getElementById(elementId);
+  while (chatContainer.firstChild) {
+    chatContainer.removeChild(chatContainer.firstChild);
+  }
+}
+
+function clearLocalStorage(selector) {
+  if (selector) {
+    let elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+      localStorage.removeItem(element.id);
+    });
+  } else {
+    localStorage.clear();
+  }
+  //displayLocalStorage('localStorageStoredContainer');
+}
+
+function copyToLocalStorage(selector) {
+  console.log('copyToLocalStorage():', selector);
+  let elements = document.querySelectorAll(selector);
+  elements.forEach(element => {
+    console.log('...element.id:', element.id);
+    if (element.tagName.toLowerCase() === 'input' || element.tagName.toLowerCase() === 'textarea') {
+      localStorage.setItem(element.id, element.value);
+      //console.log('...value:', element.value);
+    } else if (element.tagName.toLowerCase() === 'select') {
+      localStorage.setItem(element.id, element.options[element.selectedIndex].value);
+      console.log('...selected:', element.options[element.selectedIndex].value);
+    } else {
+      localStorage.setItem(element.id, element.innerHTML);
+      console.log('...innserHTML:', '...');
+    }
+  });
+}
+
+function populateFromLocalStorage() {
+  for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    let element = document.getElementById(key);
+    if (element) {
+      if (element.tagName.toLowerCase() === 'input' || element.tagName.toLowerCase() === 'textarea') {
+        element.value = localStorage.getItem(key);
+      } else if (element.tagName.toLowerCase() === 'select') {
+        let value = localStorage.getItem(key);
+        for (let option of element.options) {
+          if (option.value === value) {
+            option.selected = true;
+            break;
+          }
+        }
+      } else {
+        element.innerHTML = localStorage.getItem(key);
+      }
+    } else {
+      console.log(`Element with id ${key} does not exist in the document.`);
+    }
+  }
+}
+
+function toggleVisibility(target, status) {
+  // Use querySelectorAll to handle multiple elements with the same class
+  const elements = document.getElementById(target) ? [document.getElementById(target)] : document.querySelectorAll('.' + target);
+  // If no elements are found, log an error and exit the function
+  if (!elements.length) {
+    console.error('toggleVisibility: No elements found with ID or class:', target);
+    return;
+  }
+  // Loop through all the elements and apply the visibility changes
+  elements.forEach(element => {
+    switch(status) {
+      case 'on':
+        element.classList.add('visible');
+        element.classList.remove('hidden');
+        break;
+      case 'off':
+        element.classList.add('hidden');
+        element.classList.remove('visible');
+        break;
+      default:
+        // Toggle visibility
+        if (element.classList.contains('visible') || !element.classList.contains('hidden')) {
+          element.classList.add('hidden');
+          element.classList.remove('visible');
+        } else {
+//        element.classList.add('visible');
+          element.classList.remove('hidden');
+        }
+        break;
+    }
+  });
+}
+
+function scrollToBottom(target) {
+  console.log('scrollToBottom():', target);
+  const container = document.querySelector(target);
+//console.log('...container:', container);
+  const parentContainer = container.parentElement;
+//console.log('...parentContainer:', parentContainer);
+  container.scrollTop = container.scrollHeight;
+  if (parentContainer.scrollHeight > parentContainer.clientHeight) {
+    parentContainer.scrollTop = parentContainer.scrollHeight;
+  }
+}
+
+
+function showChatLoading() {
+  console.log('showChatLoading()');
+  document.getElementById('chatLoadingContainer').classList.remove('hidden');
+  document.getElementById('sendButtonContainer').classList.add('hidden');
+}
+
+function hideChatLoading() {
+  console.log('hideChatLoading()');
+  document.getElementById('chatLoadingContainer').classList.add('hidden');
+  document.getElementById('sendButtonContainer').classList.remove('hidden');
+}
+
+function appendMessage(content, className) {
+  console.log('appendMessage():');
+//console.log('...content:', content );
+//console.log('...className:', className);
+  const messageDiv = createChatMessageElement(content, className);
+  messageDiv.classList.add('message', className);
+  chatContainer.prepend(messageDiv);
+  scrollToBottom('.conversation-zone');
+}
+
+
+//
+//  NEW CONVERSATION LOGIC - NEW CONVERSATION LOGIC - NEW CONVERSATION LOGIC
+//
+async function buildFunctions() {
+    console.log('buildFunctions()');
+    const functions = [];
+    let content = document.getElementById('functionDefInput').value;
+    try {
+      let parsedContent = JSON.parse(content);
+      functions.push(parsedContent);
+    } catch (error) {
+      //console.log('functionDef - not JSON:', error);
+    }
+    console.log('...functions[]:', functions);
+    return functions;
+  }
+
+  async function buildMessages() {
+    console.log('buildMessages()');
+    let messages = [];
+    console.log('......messages[]0:', messages);
+    let message = {};
+    let content = document.getElementById('systemInput').value;
+    let role = 'system';
+    if (content != "") {
+      console.log('...adding role, content', role, content);
+      messages.push({ role, content });
+    }
+    let section = document.getElementById('chat-container');
+    if (!section) {
+      console.error('chat-container element not found');
+      return messages;
+    }
+    let messageElements = section.querySelectorAll('.message-element');
+    console.log('...messageElements:', messageElements);
+    // Loop through each message element
+    messageElements.forEach((element) => {
+      console.log('......messages[]1:', messages);
+      console.log('......adding element.id:', element.id);
+      role = element.querySelector('.role-indicator').textContent;
+      content = element.querySelector('.content.raw').textContent;
+      // Create a message object and push it to the messages array
+      console.log('......adding role, content', role, content);
+//    messages.push({ role, content });
+      messages.unshift({ role, content });
+      console.log('......messages[]:', messages);
+    });
+    // Convert the messages array to JSON
+    //let messagesJSON = JSON.stringify(messages);
+    //console.log(messagesJSON);
+    console.log('...messages[]2:', messages);
+    return messages;
+  }
+
+  async function newConversation() {
+    console.log('newConversation():');
+    // BUILD NEW API BODY WITH SYSTEM PARAMETERS
+    // Set API endpoint v1/chat/completions - all others
+    let functions = [];
+    let messages = [];
+    let message = {};
+    let body = {};
+    let content = '';
+    let role = '';
+
+    let model = document.getElementById('apiModel').value;
+    let temperature = Number(document.getElementById('apixTemperature').value);
+    let max_tokens = Number(document.getElementById('apixMax_tokens').value);
+    let top_p = Number(document.getElementById('apixTop_p').value);
+    let frequency_penalty = Number(document.getElementById('apixFrequency_penalty').value);
+    let presence_penalty = Number(document.getElementById('apixPresence_penalty').value);
+    // Add the API body{} parameters if they have values
+    if (model && model != "" ) { body = { ...body, model } };
+    if (temperature && temperature > 0) { body = { ...body, temperature } };
+    if (max_tokens && max_tokens > 0 ) { body = { ...body, max_tokens } };
+    if (top_p && top_p > 0 ) { body = { ...body, top_p } };
+    if (frequency_penalty && frequency_penalty > 0 ) { body = { ...body, frequency_penalty } };
+    if (presence_penalty && presence_penalty > 0 ) { body = { ...body, presence_penalty } };
+    functions = await buildFunctions();
+    messages = await buildMessages();
+//  console.log('--body:', body);
+//  console.log('---functions:', functions);
+//  console.log('---messages:', messages);
+
+    // COMBINE API BODY SECTIONS
+      if (functions && functions.length > 0) {
+        body = { ...body, function_call: "auto" };
+      }
+      if (messages.length > -1) {
+        body = { ...body, messages };
+      }
+      if (functions.length > 0) {
+        body = { ...body, functions };
+      }
+    console.log('--body:', body);
+    return body;
+  }
+
+
+function chatReadyCheck(elementId, ...variables) {
+  const element = document.getElementById(elementId);
+  let isReady = false;
+  variables.forEach(variable => {
+    if (typeof variable !== 'undefined' && variable !== 'notDefined' && variable !== '') {
+      isReady = true;
+    }
+  });
+  if (isReady) {
+    // Set ready class
+    if (!element.classList.contains('ready')) {
+      element.classList.add('ready');
+    }
+  } else {
+    // Remove ready class
+    element.classList.remove('ready');
+  }
+}
+
+
+// Function to send user message and receive bot response
+async function chatSendMessage() {
+  console.log('chatSendMessage():');
+  let endpointURL = "https://api.openai.com/v1/chat/completions";
+  let endpointKey = (document.getElementById('apiKey') && document.getElementById('apiKey').value ? document.getElementById('apiKey').value : '');
+  let message = {};
+  let content = '';
+  let role = '';
+  let data;
+  let passCount = 0;
+  console.log('...calling newConversation()');
+  bodyJson = await newConversation();
+  //
+  // API CONVERSATION LOOP
+  while (true) {
+    showChatLoading();
+    passCount += 1;
+    console.log('...passCount:', passCount);
+    if (passCount > 4) {
+      throw new Error('Too many function calls');
+    }
+    //
+    // Step 1a: Send the initial user message and available functions to GPT
+    console.log('Step 1a bodyJson:', bodyJson);
+    const response = await fetch(endpointURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${endpointKey}`,
+      },
+      body: JSON.stringify(bodyJson)
+    });
+    data = await response.json();
+    console.log('Step 1a response data{}:', data);
+
+    if (data.error) {
+      console.error('API Error:', data.error.message);
+      alert(`API Error: ${data.error.message}`);
+      toggleVisibility('sidebar-settings', 'on');
+      break;
+    } else {
+      //
+      // Step 1b: parse response message content and add to conversation - messages[]
+      console.log('Step 1b response data.choices[]:', data.choices);
+      role = data.choices[0].message.role;
+      content = data.choices[0].message.content;
+      if (content === null) {
+        content ="";
+      } else {
+        console.log('...1b: adding role, content', role, content);
+        bodyJson.messages.push({role, content});
+      }
+      //
+      // Step 2a: Check if GPT wants to call a function
+      if (data.choices[0].finish_reason == 'function_call') {
+        console.log("found: function_call on pass:", passCount);
+        // sample message format { role: 'assistant', content = null, function_call: {} }
+        message = data.choices[0].message;
+        message = replaceNullWithEmptyString(message);
+        console.log('...2a: adding body function_call:', message);
+        bodyJson.messages.push(message);
+        //
+        // Step 2b: Call the function
+        let functionName = data.choices[0].message.function_call.name;
+        let parsedfunctionArgs = JSON.parse(data.choices[0].message.function_call.arguments);
+        let functionArgs = Object.values(parsedfunctionArgs);
+        //
+        console.log('...2b: calling function:', functionName, ...functionArgs);
+        let functionResponse = await apiCallFunction(functionName, ...functionArgs);
+        let functionResponseObject = JSON.parse(functionResponse);
+        functionResponse = JSON.stringify(functionResponseObject.content);
+        console.log('...2b: adding role function from:', functionName);
+        bodyJson.messages.push({role: 'function', name: functionName, content: functionResponse});
+      } else {
+        break;
+      }
+    }
+  }
+  //
+  hideChatLoading();
+  if (data.error) {
+  } else {
+    const botReply = data.choices[0].message.content;
+    appendMessage(botReply, 'assistant');
+  }
+}  // end - chatSendMessage
+
+
+  function createChatMessageElement(message, source) {
+    console.log('createChatMessageElement():');
+    console.log('...message:', message);
+    console.log('...source:', source);
+    const date = new Date();
+    const msgId = "msgId" + date.toISOString().replace(/[:\-Z]/g, '').replace(/\./g, '_');
+    const formats = [];
+    console.log('...msgId:', msgId);
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message-element');
+    messageElement.id = msgId;
+
+    const headerElement = document.createElement('div');
+    headerElement.classList.add('chat-message-header');
+
+    const roleIndicator = document.createElement('span');
+    roleIndicator.classList.add('role-indicator');
+    roleIndicator.textContent = source;
+    headerElement.appendChild(roleIndicator);
+
+    const messageTypeSelector = document.createElement('select');
+    messageTypeSelector.classList.add('message-type-selector');
+    headerElement.appendChild(messageTypeSelector);
+
+    const removeButton = document.createElement('button');
+    removeButton.classList.add('remove-message-button');
+    removeButton.textContent = '-';
+    removeButton.onclick = function() {
+      messageElement.remove();
+    };
+    headerElement.appendChild(removeButton);
+    messageElement.appendChild(headerElement);
+
+    // need to capture before message gets altered
+    const rawContentContainer = document.createElement('pre');
+    rawContentContainer.classList.add('content', 'raw');
+    rawContentContainer.textContent = message;
+    messageElement.appendChild(rawContentContainer);
+    // formats.push('raw'); -- pushed later in the list to appear last on selector list
+
+    if (message.startsWith('```') && message.endsWith('```')) {
+      message = message.substring(3, message.length - 3);
+      const codeFormattedContainer = document.createElement('pre');
+      codeFormattedContainer.textContent = message;
+      codeFormattedContainer.classList.add('content', 'code');
+      messageElement.appendChild(codeFormattedContainer);
+      formats.push('code');
+    } else if (message.includes('```')) {
+      // future enhancement
+    }
+
+    try {
+      const parsedMessage = JSON.parse(message);
+      const jsonFormattedContainer = document.createElement('pre');
+      jsonFormattedContainer.textContent = JSON.stringify(parsedMessage, null, 2);
+      jsonFormattedContainer.classList.add('content', 'json');
+      messageElement.appendChild(jsonFormattedContainer);
+      formats.push('json');
+    } catch (error) {
+      // Not JSON
+    }
+
+    if (message.includes('\n')) {
+        const textFormattedContainer = document.createElement('pre');
+        textFormattedContainer.style.whiteSpace = 'pre-line';
+        textFormattedContainer.classList.add('content', 'textn');
+        textFormattedContainer.textContent = message;
+        textFormattedContainer.addEventListener('click', function() {
+          document.querySelectorAll('.selected').forEach(ta => ta.classList.remove('selected'));
+          this.classList.add('selected');
+        });
+        messageElement.appendChild(textFormattedContainer);
+        formats.push('textn');
+    }
+
+    const textContentContainer = document.createElement('div');
+    textContentContainer.textContent = message;
+    textContentContainer.classList.add('content', 'text');
+    textContentContainer.addEventListener('click', function() {
+      document.querySelectorAll('.selected').forEach(ta => ta.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+    messageElement.appendChild(textContentContainer);
+    formats.push('text');
+
+
+    if ((message.startsWith('<') && message.endsWith('>')) || message.startsWith('# ')) {
+      const htmlFormattedContainer = document.createElement('div');
+      htmlFormattedContainer.innerHTML = message;
+      if (message.includes('<html>')) {
+        htmlFormattedContainer.classList.add('content', 'html');
+        messageElement.appendChild(htmlFormattedContainer);
+        formats.push('html');
+      } else {
+        htmlFormattedContainer.classList.add('content', 'markup');
+        messageElement.appendChild(htmlFormattedContainer);
+        formats.push('markup');
+      }
+    }
+
+    formats.push('raw');  // will be last on select list
+
+    formats.forEach(format => {
+      messageElement.classList.add(`msgType-${format}`);
+      const option = document.createElement('option');
+      option.value = format;
+      option.textContent = format.toUpperCase();
+      messageTypeSelector.appendChild(option);
+    });
+
+    messageTypeSelector.onchange = function() {
+      const selectedFormat = this.value;
+      const contentContainers = messageElement.querySelectorAll('.content');
+      console.log('selectedFormat:', selectedFormat);
+      contentContainers.forEach(container => {
+        container.classList.remove('visible');
+        if (container.classList.contains(selectedFormat)) {
+          container.classList.add('visible');
+        }
+      });
+    }; // end - onchange function
+
+    if (formats.length > 1) {
+      messageTypeSelector.classList.add('visible');
+      messageTypeSelector.selectedIndex = 1;
+    } else {
+      textContentContainer.classList.add('visible');
+    }
+
+    messageTypeSelector.selectedIndex = 0; messageTypeSelector.dispatchEvent(new Event('change'));
+    return messageElement;
+  }
+
+
+// UTILITY FUNCTION - EXECUTE ANOTHER FUNCTION by functionName with args - zAPIKit-20231211T0840
+async function apiCallFunction(functionName, ...args) {
+  console.log('callFunction():', functionName, ...args);
+  console.log('--...args:', ...args);
+  console.log('--args:', args);
+//let defaultResult = '{"status": "manual_check_required","message": "The operation may have been processed. Please perform a manual check to confirm the status."}';
+//let defaultResult = '{"status": "unknown", "message": "The operation was executed, but the outcome is unknown."}';
+  let defaultResult = '{"status": "success", "message": "The operation completed successfully, no errors were reported."}';
+  let response = {};
+  if (typeof window[functionName] === 'function') {
+    console.log('--Function found...calling');
+    let functionResult = window[functionName](...args);
+    console.log('--functionResult:', functionResult);
+    let role = "function";
+    let name = functionName;
+    let content = functionResult || defaultResult;  // zzz FIX for no response!! 20231208 20231209
+    let parsedContent = {};
+    try {
+      parsedContent = JSON.parse(content);
+      content = JSON.stringify(parsedContent);
+    } catch (error) {
+      console.log('--content is not valid JSON:', error);
+    }
+    console.log('parsedContent:', parsedContent);
+    console.log('content:', content);
+    response = { ...response, role };
+    response = { ...response, name };
+    response = { ...response, content };
+  } else {
+    console.log('Function not found:', functionName);
+  }
+  let responseString = JSON.stringify(response, null, 2);
+  return responseString;
+}
+
+
+function replaceNullWithEmptyString(obj) {
+  for (var key in obj) {
+    if (obj[key] === null) {
+      obj[key] = "";
+    } else if (typeof obj[key] === 'object') {
+      obj[key] = replaceNullWithEmptyString(obj[key]);
+    }
+  }
+  return obj;
+}
+
+
+async function getCodeView(elementId) {
+  console.log('getCodeView():', elementId);
+  element = document.getElementById(elementId)
+  let content = await newConversation();
+  content = JSON.stringify(content, null, 2);
+  element.value = content;
+}
+
+
+
+function setLeftSidebars(){
+  let content =
+`{
+  "name": "sendEmail",
+  "description": "Constructs a mailto link to send an email to the specified recipient with a subject and content.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "emailTo": {
+      "type": "string",
+      "description": "The email address of the recipient."
+    },
+    "subject": {
+      "type": "string",
+      "description": "The subject line of the email."
+    },
+    "content": {
+      "type": "string",
+      "description": "The body content of the email."
+    }
+    },
+    "required": ["emailTo", "subject", "content"]
+  }
+}`;
+document.getElementById("functionDefInput").value = content;
+//document.getElementById('systemInput').value = '';
+};
+
+
+function sendEmail(emailTo, subject, content) {
+  console.log('sendEmail():');
+  console.log('--emailTo:', emailTo);
+  console.log('--subject:', subject);
+  console.log('--content:', content);
+  var link = "mailto:" + encodeURIComponent(emailTo)
+        + "?subject=" + encodeURIComponent(subject)
+        + "&body=" + encodeURIComponent(content);
+
+  window.location.href = link;
+}
+</script>
+
+<script>
+// JavaScript to handle opening and closing the popup
+function openTablePopup(tableId) {
+  var popup = document.querySelector('.popup');
+  var overlay = document.querySelector('.overlay');
+  var popupHeader = document.getElementById('popupHeader');
+  var popupTable = document.getElementById('popupTable');
+
+  // Populate the popup with the provided table
+  if (tableId === 'apiHelp') {
+    popupHeader.textContent = 'API Parameters Help';
+    popupTable.innerHTML = `
+      <table>
+        <tr>
+          <th>Setting</th>
+          <th>Description</th>
+          <th>Range</th>
+          <th>Default Value</th>
+          <th>Suggested Value</th>
+        </tr>
+        <tr>
+          <td>API Key</td>
+          <td>The API Key is a unique identifier that allows access to OpenAI's API. It is required for authentication and authorization to use the API.</td>
+          <td>N/A (specific to each user)</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Model</td>
+          <td>The Model setting determines the specific language model that will be used for generating text. OpenAI's API offers several pre-trained models, each with its own strengths and capabilities.</td>
+          <td>N/A (specific to the available models)</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td>Temperature controls the randomness of the generated text. Higher temperatures result in more random and diverse outputs, while lower temperatures produce more conservative and predictable responses.</td>
+          <td>0.0 to 1.0</td>
+          <td>0.7</td>
+          <td>0.5</td>
+        </tr>
+        <tr>
+          <td>Top_p</td>
+          <td>Top_p (also known as nucleus sampling) controls the diversity of the generated text by only considering the most probable tokens. This helps in avoiding repetitive or nonsensical outputs.</td>
+          <td>0.0 to 1.0</td>
+          <td>0.9</td>
+          <td>0.7</td>
+        </tr>
+        <tr>
+          <td>Frequency Penalty</td>
+          <td>Frequency Penalty discourages the model from repeating the same or similar words in the generated text. It helps in promoting diversity and reducing redundancy in the outputs.</td>
+          <td>0.0 to 1.0</td>
+          <td>0.0</td>
+          <td>0.3</td>
+        </tr>
+        <tr>
+          <td>Presence Penalty</td>
+          <td>Presence Penalty discourages the model from generating outputs that contain certain specified tokens. This can be useful for controlling the presence of specific content in the generated text.</td>
+          <td>0.0 to 1.0</td>
+          <td>0.0</td>
+          <td>0.1</td>
+        </tr>
+        <tr>
+          <td>Stop Sequence</td>
+          <td>Stop Sequence is a special token or sequence of tokens that, when generated by the model, indicates that the generation process should stop. It can be used to control the length of the generated text.</td>
+          <td>N/A (depends on the specific stop sequence used)</td>
+          <td>None</td>
+          <td>Customized based on the desired text length</td>
+        </tr>
+      </table>
+    `;
+  } else if (tableId === 'functionDefHelp') {
+    popupHeader.textContent = 'functionDef Help';
+    popupTable.innerHTML = `
+      <table>
+        <tr>
+          <th>function</th>
+          <th>functionDef</th>
+        </tr>
+        <tr>
+          <td>sendEmail()</td>
+          <td onclick="setLeftSidebars()">click [here] to load sample</br></br>when this JSON{} is present in the functionDef sidebar it is added to the prompt functions[] and provides a template for the bot to use the function sendEmail()</br></br>This should allow the bot to open your email application and populate it.</td>
+        </tr>
+      </table>
+    `;
+  }
+  // Show the popup and overlay
+  popup.style.display = 'block';
+  overlay.style.display = 'block';
+}
+
+// listener for overlay screen
+document.querySelector('.overlay').addEventListener('click', function() {
+  document.querySelector('.popup').style.display = 'none';
+  document.querySelector('.overlay').style.display = 'none';
+});
+
+</script>
+
+  <script>  // TEXT TO SPEECH
+    // Retrieve settings from local storage
+    document.getElementById('volume').value = localStorage.getItem('volume') || 1;
+    document.getElementById('rate').value = localStorage.getItem('rate') || 1;
+    document.getElementById('pitch').value = localStorage.getItem('pitch') || 1;
+
+    function toggleSpeech() {
+      var selectedElement = document.querySelector('.selected');
+      if (selectedElement) {
+        console.log('...selectedElement:', selectedElement);
+        var text;
+        if (selectedElement.tagName === 'TEXTAREA' || selectedElement.tagName === 'INPUT') {
+          text = selectedElement.value;
+        } else {
+          text = selectedElement.textContent;
+        }
+        var speech = new SpeechSynthesisUtterance(text);
+        speech.volume = document.getElementById('volume').value;
+        speech.rate = document.getElementById('rate').value;
+        speech.pitch = document.getElementById('pitch').value;
+        if (window.speechSynthesis.speaking) { // Check if speech is already in progress
+          window.speechSynthesis.cancel(); // Stop speech if in progress
+        } else {
+          window.speechSynthesis.speak(speech);
+        }
+      } else {
+        alert("Please select a text to convert to speech");
+      }
+    }
+
+    function stopSpeech() {
+      window.speechSynthesis.cancel(); // Stop speech
+    }
+
+    function toggleTtsSettings() {
+      var settingsContent = document.getElementById("settingsContent");
+      if (settingsContent.style.display === "block") {
+        settingsContent.style.display = "none";
+      } else {
+        settingsContent.style.display = "block";
+      }
+    }
+  </script>  <!-- end - TEXT TO SPEECH -->
+
+  <script>
+    function initializeRangeInputs() {
+      // Get all range inputs
+      const rangeInputs = document.querySelectorAll('input[type="range"]');
+
+      // Function to update the value of the related input or slider
+      function updateRelatedElement(source, target) {
+        const value = source.value;
+        target.value = value;
+      }
+
+      // Add event listeners for range inputs
+      rangeInputs.forEach(rangeInput => {
+        rangeInput.addEventListener('input', function() {
+          const relatedInputId = this.id.replace('-slider', '');
+          const relatedInput = document.getElementById(relatedInputId);
+          updateRelatedElement(this, relatedInput);
+        });
+
+        // Find the related number input for each range input and add event listener
+        const relatedNumberInputId = rangeInput.nextElementSibling.id;
+        const relatedNumberInput = document.getElementById(relatedNumberInputId);
+        relatedNumberInput.addEventListener('input', function() {
+          if (this.value < +rangeInput.min) this.value = rangeInput.min;
+          if (this.value > +rangeInput.max) this.value = rangeInput.max;
+          updateRelatedElement(this, rangeInput);
+        });
+      });
+
+      // Initialize the values
+      rangeInputs.forEach(rangeInput => {
+        rangeInput.dispatchEvent(new Event('input'));
+      });
+    }
+
+  </script>
+
+</body>
+</html>
