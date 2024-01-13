@@ -10,7 +10,6 @@ Welcome to promptGenAI, a standalone web application designed to provide real-ti
 - **Self-Contained System:** No reliance on external codebases or server-side calls, except for direct communication with the OpenAI API.
 - **Real-Time Interaction:** Enjoy engaging and interactive chat experiences with real-time responses.
 - **Seamless Integration:** A cohesive and responsive user interface.
-- **Privacy-Centric:** User data and conversations remain private.
 
 **User Experience**
 
