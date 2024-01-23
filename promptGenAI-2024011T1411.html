@@ -732,14 +732,13 @@ input[type="text"] {
                 <button class="btn hidden" title="Copy TTS setting to hold area" onclick="copyToLocalStorage('.tts')">hold TTS</button>
               </div>
             </div>
-
+            <p>&copy; <span id="currentYear"></span>&nbsp<a href="https://interestingperspectives.com" style="color: #121212;">Interesting Perspectives</a>. All Rights Reserved.</p>
           </div>  <!-- end - parameters-container -->
         </div>  <!-- end - sidebar-content -->
       </aside>
 
     </div>  <!-- end - page-content -->
     <footer class="footer">
-      <p>2024 Jeff Johnson - <a href="https://interestingperspectives.com">interestingperspectives.com</a></p>
     </footer>
 
     <!-- The Overlay -->
@@ -753,6 +752,9 @@ input[type="text"] {
   </div>  <!-- end - container -->
 
 
+  <script>
+    document.getElementById("currentYear").innerText = new Date().getFullYear();
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
