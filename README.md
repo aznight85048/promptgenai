@@ -1,4 +1,4 @@
-# promptGenAI - API Chat Interface - HTML + JavScript (NO FRAMEWORK)
+# promptGenAI - API Chat Interface / HTML+JavaScript(No Framework)
 
 **Introduction**
 
