@@ -1,67 +1,70 @@
-# promptGenAI - API Chat Interface / HTML+JavaScript(No Framework)
+# PromptGenAI - AI API Endpoint Chat Interface
+version 200405 - Now compatible with ollama and Open AI API
 
-**Introduction**
+## Introduction
+Welcome to **PromptGenAI**! This is a simple, no-framework HTML application designed to make it incredibly easy to interact with local and served AI models using Generative AI API Endpoints. If you're an Ollama user, especially if you're new to Large Language Models (LLMs) or have struggled with other interface setups, configurations, disappearing models, complicated installs, or containers, this project is for you! Our goal is to provide a no-cost, user-friendly way to explore local LLMs without the need for complex frameworks or dependencies.
 
-Welcome to promptGenAI, a standalone web application designed to provide real-time interaction with the OpenAI API. This user-friendly interface seamlessly integrates HTML, CSS, and JavaScript to offer a streamlined experience for users of all technical levels. Whether you're new to AI or a business owner seeking innovation, promptGenAI is tailored for you.
+## Features
+- **No Framework Required**: Just plain HTML, CSS, and JavaScript. Perfect for beginners and those who want to avoid complicated setups.
+- **FlexBox Layout**: Responsive design with FlexBox to ensure a seamless experience across devices.
+- **Generative AI Integration**: Easily connect to various AI APIs and explore the capabilities of Large Language Models.
+- **Ollama-Friendly**: Specifically designed for quick and hassle-free interaction with Ollama models.
 
-**Key Features**
+## Quick Start Guide for Ollama Users
 
-- **User-Friendly Design:** Engage with the AI effortlessly and simulate conversations with ease.
-- **Self-Contained System:** No reliance on external codebases or server-side calls, except for direct communication with the OpenAI API.
-- **Real-Time Interaction:** Enjoy engaging and interactive chat experiences with real-time responses.
-- **Seamless Integration:** A cohesive and responsive user interface.
+### Prerequisites
+- A modern web browser.
+- Access to Ollama AI.
 
-**User Experience**
+### Steps
+1. **Download Ollama via Linux Shell**:
+    ```sh
+    curl -fsSL https://ollama.com/install.sh | sh
+    ```
 
-- **Streamlined Workflow:** Start conversing with the AI immediately upon loading the application.
-- **Interactive Chat Window:** Mimics popular messaging platforms for a familiar environment.
-- **Responsive Design:** Consistent experience across various devices and screen sizes.
+2. **Pull a Small Model from Ollama's Library**:
+    ```sh
+    ollama pull tinydolphin:1.1b-v2.8-q5_K_M
+    ```
 
-**Accessibility**
+3. **Open `promptGenAI.html` with your browser**:
+   - Note: The actual `promptGenAI.html` file name may include a date/time stamp. Ensure you have the correct file in the directory where you saved it.
 
-- **Cross-Platform Compatibility:** Compatible with all major browsers, allowing access from any device.
-- **Lightweight Application:** Minimal load times, making promptGenAI accessible even on slower internet connections.
+4. **Troubleshooting** (ollama.local 'red' indicator - typically due to cors issue)
+   If there are issues, two additional commands should get you started. While not a perfect solution, these commands should enable you to start chatting with the downloaded local models:
+    ```sh
+    systemctl stop ollama
+    OLLAMA_ORIGINS=* OLLAMA_HOST=127.0.0.1:11434 OLLAMA_MODELS=/usr/share/ollama/.ollama/models ollama serve
+    ```
+   **NOTE1:** Step 4 Troubleshooting is a quick fix (restarts ollama with your user) and
+              will need to be re-done every time the ollama serve session is restarted.
+   
+   **NOTE2:** DO NOT 'ollama pull models' after executng Step 4 Troubleshooting.
+              Restart session before pulling additional models.
+              Restarting session restarts with the initial configuration (user:ollama)
+   
+## Usage
+- Select a model from the list, 'Enter your message', and click send.
+- Follow the on-screen prompts to interact with the AI models.
+- Ensure you have your API keys ready and configured as needed.
 
-**Quick Start**
+## Demo
+![promptGenAI w/ ollama](promptGenAI-ollama-localLLM.jpg)
 
-To get started:
+## Contributing
+Suggestions and feedback are always welcome! Please fork this repository and submit pull requests.
 
-1. Download the application files or clone the repository from GitHub.
-2. Open the HTML file in your web browser.
-3. Enter your OpenAI API key in the Settings sidebar.
-4. Enter your prompt for the AI to respond to and press the "Send" button.
-5. Start interacting with the AI.
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-**Interface Overview**
+## Contact
+For any questions or suggestions, please feel free to open an issue or contact me directly at [aznight85048@gmail.com](mailto:aznight85048@gmail.com).
 
-1. **Application Interface**: Main chat interface, sidebars for code, function definition, system settings, and additional settings.
-2. **Header Navigation**: Options to clear the chat conversation and toggle the visibility of the sidebars.
-3. **Sidebars**: Input code, function definitions, system parameters, and additional settings for the AI.
-4. **Chat Interface**: Send messages to the AI and receive responses.
-5. **Footer**: Contains attribution to the developer and a link to the developer's website.
+---
 
-**Using the Application**
+## Special Note to Ollama Users
+I understand the challenges you might face with other interface setups and configurations (I know how frustrating it can be). **PromptGenAI** is designed to offer you a seamless and straightforward experience. Dive right into exploring local Large Language Models without the hassle of complicated installs or disappearing models. I'll do my best to make help make this journey with LLMs enjoyable and productive!
 
-- **Entering Messages**: Use the message input area to enter your message to the AI and press the "Send" button.
-- **Text to Speech**: Convert selected text to speech by clicking the speaker icon.
-- **Sidebars**: Input code, function definitions, system parameters, and additional settings for the AI.
-- **Help Features**: Access help information for API parameters and function definitions by clicking the "?" button in the respective sidebars.
-- **Clear Chat**: Use the "Clear Chat" button to clear the chat conversation.
+---
 
-**Additional Features**
-
-- **Function Definitions**: Define custom functions using the Function Definition sidebar for the AI to perform specific tasks.
-- **System Parameters**: Define system parameters in the System sidebar to provide additional context or information to the AI.
-- **Settings**: Configure API parameters such as model, temperature, max tokens, top p, frequency penalty, and presence penalty in the Settings sidebar.
-- **Local Storage**: Settings and configurations are stored in local storage for persistence across sessions.
-
-**Using Functions**
-
-- **Send Email Function**: A sample function "sendEmail" is provided for demonstration. Click on the link provided to load the sample function into the Function Definition sidebar.
-- **Calling Functions**: The AI can call custom functions defined in the Function Definition sidebar to perform specific tasks.
-
-**Conclusion**
-
-promptGenAI provides a user-friendly and comprehensive platform for interacting with the AI, defining custom functions, and configuring API parameters. With features like Text to Speech, popup help, and local storage, it offers a seamless and efficient user experience for AI interactions.
-
-*Note: The OpenAI API key is required for access. This can be obtained from OpenAI without signing up for the monthly service plan.*
+**Keywords**: Local Large Language Models, , LLLM, No Framework, No Cost, Ollama, Generative AI, Simple AI Interface, AI for Beginners, Local LLM Exploration, AI API Endpoint, vanilla JavaSCript, No External Libraries, No 3rd Party Extensions
