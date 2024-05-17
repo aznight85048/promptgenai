@@ -49,7 +49,7 @@ Welcome to **PromptGenAI**! This is a simple, no-framework HTML application desi
 - Ensure you have your API keys ready and configured as needed.
 
 ## Demo
-![promptGenAI w/ ollama](promptGenAI-ollama-localLLM.jpg)
+![promptGenAI w/ ollama](promptGenAI-ollama.jpg)
 
 ## Contributing
 Suggestions and feedback are always welcome! Please fork this repository and submit pull requests.
