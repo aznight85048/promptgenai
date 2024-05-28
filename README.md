@@ -2,7 +2,7 @@
 version 200405 - Now compatible with ollama and Open AI API
 
 ## Introduction
-Welcome to **PromptGenAI**! This is a simple, no-framework HTML application designed to make it incredibly easy to interact with local and served AI models using Generative AI API Endpoints. If you're an Ollama user, especially if you're new to Large Language Models (LLMs) or have struggled with other interface setups, configurations, disappearing models, complicated installs, or containers, this project is for you! Our goal is to provide a no-cost, user-friendly way to explore local LLMs without the need for complex frameworks or dependencies.
+Welcome to **PromptGenAI**! This is a simple, no-framework HTML application designed to make it incredibly easy to interact with local and served AI models using Generative AI API Endpoints. If you're an Ollama user, especially if you're new to Large Language Models (LLMs) or have struggled with other interface setups, configurations, disappearing models, complicated installs, or containers, this project is for you! Our goal is to provide a user-friendly way to explore local LLMs without the need for complex frameworks or dependencies.
 
 ## Features
 - **No Framework Required**: Just plain HTML, CSS, and JavaScript. Perfect for beginners and those who want to avoid complicated setups.
