@@ -43,6 +43,9 @@ Welcome to **PromptGenAI**! This is a simple, no-framework HTML application desi
               Restart session before pulling additional models.
               Restarting session restarts with the initial configuration (user:ollama)
    
+    **Ollama "API Key":** While ollama does not require an API Key, this application checks for the presence of an API Key. When using ollama endpoints, you can use the word 'ollama' or any other value in the API Key field to satisfy the application's API Key requirement
+   
+   
 ## Usage
 - Select a model from the list, 'Enter your message', and click send.
 - Follow the on-screen prompts to interact with the AI models.
@@ -50,6 +53,7 @@ Welcome to **PromptGenAI**! This is a simple, no-framework HTML application desi
 
 ## Demo
 ![promptGenAI w/ ollama](promptGenAI-ollama.jpg)
+
 
 ## Contributing
 Suggestions and feedback are always welcome! Please fork this repository and submit pull requests.
