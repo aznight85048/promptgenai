@@ -1,5 +1,5 @@
 # PromptGenAI - AI API Endpoint Chat Interface
-version 200405 - Now compatible with ollama and Open AI API
+version 202405 - Now compatible with ollama and Open AI API
 
 ## Introduction
 Welcome to **PromptGenAI**! This is a simple, no-framework HTML application designed to make it incredibly easy to interact with local and served AI models using Generative AI API Endpoints. If you're an Ollama user, especially if you're new to Large Language Models (LLMs) or have struggled with other interface setups, configurations, disappearing models, complicated installs, or containers, this project is for you! Our goal is to provide a user-friendly way to explore local LLMs without the need for complex frameworks or dependencies.
@@ -71,4 +71,4 @@ I understand the challenges you might face with other interface setups and confi
 
 ---
 
-**Keywords**: Local Large Language Models, , LLLM, No Framework, No Cost, Ollama, Generative AI, Simple AI Interface, AI for Beginners, Local LLM Exploration, AI API Endpoint, vanilla JavaSCript, No External Libraries, No 3rd Party Extensions
+**Keywords**: local large language models, , lllm, no framework, ollama, generative ai, simple ai ui, ai for beginners, local llm, api, endpoint, vanilla, javascript, no external libraries, no 3rd party extensions, no containers, webui alternative, web ui alternative, openweb ui alternative, simple
