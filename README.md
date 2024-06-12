@@ -1,5 +1,18 @@
 # PromptGenAI - AI API Endpoint Chat Interface
-version 202405 - Now compatible with ollama and Open AI API
+
+## Version 202406 - Interface Overhaul
+- **Still No Framework Required** - Only need your browser
+- **Voice-to-Text**: Easily convert spoken words into text for input.
+- **Text-to-Voice**: Listen to AI-generated responses with text-to-speech functionality.
+- **Phone Screen Support**: Optimized design for smaller screens, making it easier to use on mobile devices.
+- **Enhanced User Interface**: Improved layout and usability for a better overall experience.
+- **Improved API Integration**: Includes base configuration to Ollama and Open AI APIs for enhanced functionality.
+- **Bug Fixes**: Addressed any issues from previous versions to enhance overall experience.
+
+Don't forget to give the new features a try and let us know your feedback for further improvements!
+
+## version 202405 - Now compatible with ollama and Open AI API
+
 
 ## Introduction
 Welcome to **PromptGenAI**! This is a simple, no-framework HTML application designed to make it incredibly easy to interact with local and served AI models using Generative AI API Endpoints. If you're an Ollama user, especially if you're new to Large Language Models (LLMs) or have struggled with other interface setups, configurations, disappearing models, complicated installs, or containers, this project is for you! Our goal is to provide a user-friendly way to explore local LLMs without the need for complex frameworks or dependencies.
@@ -11,12 +24,14 @@ Welcome to **PromptGenAI**! This is a simple, no-framework HTML application desi
 - **Ollama-Friendly**: Specifically designed for quick and hassle-free interaction with Ollama models.
 
 ## Quick Start Guide for Ollama Users
+> "Ollama installation instructions are provided as an option for users who do not already have access to an OpenAI API endpoint or those who wish to explore the capabilities of Ollama. Note that installing Ollama is NOT REQUIRED for PromptGenAI to function as a chat interface with other endpoints."
 
 ### Prerequisites
 - A modern web browser.
 - Access to Ollama AI.
 
 ### Steps
+
 1. **Download Ollama via Linux Shell**:
     ```sh
     curl -fsSL https://ollama.com/install.sh | sh
@@ -51,7 +66,7 @@ Welcome to **PromptGenAI**! This is a simple, no-framework HTML application desi
 - Follow the on-screen prompts to interact with the AI models.
 - Ensure you have your API keys ready and configured as needed.
 
-## Demo
+## Demo (screenshot version 202405)
 ![promptGenAI w/ ollama](promptGenAI-ollama.jpg)
 
 
