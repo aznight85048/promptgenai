@@ -1,5 +1,16 @@
 # PromptGenAI - AI API Endpoint Chat Interface
 
+## Version 202407 - Configuration added for unofficial ollama_proxy.py  
+
+- **ollama_proxy.py** [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) - A bare bones Python proxy server to bypass the common cors errors when attempting to use ollama serve API with a single work station browser setup.  If you have ollama installed and python accessible at your command line it should provide you with browser access to the ollama serve API via a proxy address. (no-framework--no containers--no 3rd party libraries--no external services)
+
+
+## Related Projects
+
+ollama_proxy.py and other home-brew troubleshooting utilities will be available here, [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) repository.
+
+
+
 ## Version 202406 - Interface Overhaul
 - **Still No Framework Required** - Only need your browser
 - **Voice-to-Text**: Easily convert spoken words into text for input.
