@@ -5,6 +5,8 @@
 ### Overview
 The **ollama_proxy.py** script from the [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) repository is a bare-bones Python proxy server designed to mitigate common CORS (Cross-Origin Resource Sharing) issues. This script allows for seamless interaction with the Ollama Serve API through a browser on a single workstation setup. By leveraging Python and the Ollama Serve API, users can bypass typical browser restrictions without the need for additional frameworks, containers, third-party libraries, or external services.
 
+**Note:** The use of the **ollama_proxy.py** script is optional. It is designed to ease common challenges when accessing the Ollama Serve API from a single workstation setup. If you are new to this app, Ollama Serve, or local LLM (Language Model), the proxy script can help simplify the setup process and ensure smoother operation.
+
 
 ## Version 202406 - Interface Overhaul
 - **Still No Framework Required** - Only need your browser
