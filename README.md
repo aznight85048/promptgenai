@@ -1,14 +1,9 @@
 # PromptGenAI - AI API Endpoint Chat Interface
 
-## Version 202407 - Configuration added for unofficial ollama_proxy.py  
+## Version 202407 - ollama_proxy.py Configuration Added
 
-- **ollama_proxy.py** [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) - A bare bones Python proxy server to bypass the common cors errors when attempting to use ollama serve API with a single work station browser setup.  If you have ollama installed and python accessible at your command line it should provide you with browser access to the ollama serve API via a proxy address. (no-framework--no containers--no 3rd party libraries--no external services)
-
-
-## Related Projects
-
-ollama_proxy.py and other home-brew troubleshooting utilities will be available here, [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) repository.
-
+### Overview
+The **ollama_proxy.py** script from the [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) repository is a bare-bones Python proxy server designed to mitigate common CORS (Cross-Origin Resource Sharing) issues. This script allows for seamless interaction with the Ollama Serve API through a browser on a single workstation setup. By leveraging Python and the Ollama Serve API, users can bypass typical browser restrictions without the need for additional frameworks, containers, third-party libraries, or external services.
 
 
 ## Version 202406 - Interface Overhaul
@@ -21,6 +16,7 @@ ollama_proxy.py and other home-brew troubleshooting utilities will be available 
 - **Bug Fixes**: Addressed any issues from previous versions to enhance overall experience.
 
 Don't forget to give the new features a try and let us know your feedback for further improvements!
+
 
 ## version 202405 - Now compatible with ollama and Open AI API
 
@@ -90,11 +86,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 For any questions or suggestions, please feel free to open an issue or contact me directly at [aznight85048@gmail.com](mailto:aznight85048@gmail.com).
 
----
 
 ## Special Note to Ollama Users
 I understand the challenges you might face with other interface setups and configurations (I know how frustrating it can be). **PromptGenAI** is designed to offer you a seamless and straightforward experience. Dive right into exploring local Large Language Models without the hassle of complicated installs or disappearing models. I'll do my best to make help make this journey with LLMs enjoyable and productive!
 
----
 
-**Keywords**: local large language models, , lllm, no framework, ollama, generative ai, simple ai ui, ai for beginners, local llm, api, endpoint, vanilla, javascript, no external libraries, no 3rd party extensions, no containers, webui alternative, web ui alternative, openweb ui alternative, simple
+### Related Projects
+Explore additional utilities and troubleshooting tools in the [unofficial-ollama-helpers](https://github.com/aznight85048/unofficial-ollama-helpers) repository to further enhance your experience with the Ollama Serve API.
+
+
+**Keywords**: local large language models, , lllm, no framework, ollama, generative ai, simple ai ui, llm for beginners, local llm, api, endpoint, vanilla, javascript, no external libraries, no 3rd party extensions, no containers, webui alternative, web ui alternative, openweb ui alternative, simple
