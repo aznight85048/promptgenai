@@ -7,6 +7,9 @@ The **ollama_proxy.py** script from the [unofficial-ollama-helpers](https://gith
 
 **Note:** The use of the **ollama_proxy.py** script is optional. It is designed to ease common challenges when accessing the Ollama Serve API from a single workstation browser setup. If you are new to this app, Ollama Serve, or local LLM (Large Language Model), the proxy script can help simplify the ollama setup process and allow you to begin your journey with local LLMs.
 
+## Demo (screenshot version 202407)
+![promptGenAI 202407 Initial Screen](promptGenAI-20240730-screenshot.jpg)
+
 
 ## Version 202406 - Interface Overhaul
 - **Still No Framework Required** - Only need your browser
